@@ -1952,6 +1952,155 @@ void GetFlags(int narg, char **argv, string &inputfile, int &option,
       beta = 1.0;
 
 }
+
+void b
+(
+   CSR<INDEXTYPE,VALUETYPE> &S, 
+   INDEXTYPE M, 
+   INDEXTYPE N, 
+   INDEXTYPE K, 
+   VALUETYPE alpha, 
+   VALUETYPE beta,
+   int tkern
+)
+{
+   int nerr, szAligned; 
+   size_t i, j, szA, szB, szC, lda, ldc, ldb; 
+   VALUETYPE *pb, *b, *pc0, *c0, *pc, *c, *pa, *a, *values;
+
+   std::default_random_engine generator;
+   std::uniform_real_distribution<VALUETYPE> distribution(0.0,1.0);
+/*
+ * NOTE: we are considering only row major A, B and C storage now
+ *       A -> MxK, B->NxK, C->MxD  
+ */
+   lda = ldb = ldc = K; // both row major, K multiple of VLEN 
+/*
+ * NOTE: not sure about system's VLEN from this user code. So, make it cacheline
+ * size aligned ....
+ */
+   szAligned = ATL_Cachelen / sizeof(VALUETYPE);
+   szA = ((M*ldb+szAligned-1)/szAligned)*szAligned;  // szB in element
+   szB = ((N*ldb+szAligned-1)/szAligned)*szAligned;  // szB in element
+   szC = ((M*ldc+szAligned-1)/szAligned)*szAligned;  // szC in element 
+   
+   pa = (VALUETYPE*)malloc(szA*sizeof(VALUETYPE)+2*ATL_Cachelen);
+   assert(pa);
+   a = (VALUETYPE*) ATL_AlignPtr(pa);
+   
+   pb = (VALUETYPE*)malloc(szB*sizeof(VALUETYPE)+2*ATL_Cachelen);
+   assert(pb);
+   b = (VALUETYPE*) ATL_AlignPtr(pb);
+
+   pc0 = (VALUETYPE*)malloc(szC*sizeof(VALUETYPE)+2*ATL_Cachelen);
+   assert(pc0);
+   c0 = (VALUETYPE*) ATL_AlignPtr(pc0); 
+      
+   pc = (VALUETYPE*)malloc(szC*sizeof(VALUETYPE)+2*ATL_Cachelen);
+   assert(pc);
+   c = (VALUETYPE*) ATL_AlignPtr(pc); 
+   
+   // init   
+   for (i=0; i < szA; i++)
+   {
+   #if 1
+      a[i] = distribution(generator);  
+   #else
+      //a[i] = 1.0*i;  
+      a[i] = 0.5;  
+   #endif
+   }
+   for (i=0; i < szB; i++)
+   {
+   #if 1
+      b[i] = distribution(generator);  
+   #else
+      //b[i] = 1.0*i;  
+      b[i] = 0.5;  
+   #endif
+   }
+   for (i=0; i < szC; i++)
+   {
+   #if 0
+      c[i] = c0[i] = distribution(generator);  
+   #else  /* to test beta0 case */
+      c[i] = 0.0; c0[i] = 0.0;
+   #endif
+   }
+  
+   if (M > S.rows) M = S.rows; // M can't be greater than A.rows  
+/*
+ *    csr may consists all 1 as values... init with random values
+ */
+   values = (VALUETYPE*)malloc(S.nnz*sizeof(VALUETYPE));
+   assert(values);
+   for (i=0; i < S.nnz; i++)
+      values[i] = distribution(generator);  
+
+   fprintf(stdout, "Applying test kernel\n");
+   // mytest_csr(tkern, M, N, K, alpha, S.nnz, S.rows, S.cols, values, 
+   //       S.colids, S.rowptr, S.rowptr+1, a, lda, b, ldb, beta, c, ldc);   
+   mytest_csr('m', M, N, K, alpha, S.nnz, S.rows, S.cols, values, 
+         S.colids, S.rowptr, S.rowptr+1, a, lda, b, ldb, beta, c, ldc);   
+   printf("RESULT Matrix C: (Dimsension %d)\n", szC);
+   for (i=0; i < szC; i++)
+   {
+      printf("%f\t", c[i]);
+   }
+
+}
+
+void a(string inputfile, int option, INDEXTYPE M, 
+      INDEXTYPE K, int csKB, int nrep, int isTest, int skipHeader, 
+      VALUETYPE alpha, VALUETYPE beta, int tkern)
+{
+   int nerr, norandom;
+   INDEXTYPE i;
+   vector<double> res0, res1; 
+   double exeTime0, exeTime1, inspTime0, inspTime1; 
+   INDEXTYPE N, blkid; /* A->MxN, B-> NxD, C-> MxD */
+   vector <INDEXTYPE> rblkids;
+   CSR<INDEXTYPE, VALUETYPE> S_csr0; 
+   CSR<INDEXTYPE, VALUETYPE> S_csr1; 
+   CSC<INDEXTYPE, VALUETYPE> S_csc;
+   
+
+   SetInputMatricesAsCSC(S_csc, inputfile);
+   S_csc.Sorted(); 
+   N = S_csc.cols; 
+   
+   // generate CSR version of A  
+   S_csr0.make_empty(); 
+   S_csr0 = *(new CSR<INDEXTYPE, VALUETYPE>(S_csc));
+   S_csr0.Sorted();
+  /*
+   * check for valid M.
+   * NOTE: rows and cols of sparse matrix can be different 
+   */
+   if (!M || M > S_csr0.rows)
+      M = S_csr0.rows;
+/*
+ * test the result if mandated 
+ * NOTE: general notation: 
+ *          Sparse Matrix : S -> MxN 
+ *          Dense Matrix  : A->MxK B->NxK, C->MxK
+ */
+   assert(N && M && K);
+   // passed mytrusted and mytest function pointers 
+   // nerr = doTesting_Acsr<mytrusted_csr, mytest_csr>
+   b(S_csr0, M, N, K, alpha, beta, tkern);                 
+   // // error checking 
+   // if (!nerr)
+   //    fprintf(stdout, "PASSED TEST\n");
+   // else
+   // {
+   //    fprintf(stdout, "FAILED TEST, %d ELEMENTS\n", nerr);
+   //    exit(1); // test failed, not timed 
+   // }
+
+}
+
+
 int main(int narg, char **argv)
 {
    INDEXTYPE M, K;
@@ -1961,7 +2110,8 @@ int main(int narg, char **argv)
    string inputfile; 
    GetFlags(narg, argv, inputfile, option, M, K, csKB, nrep, isTest, skHd, 
             alpha, beta, tkern);
-   GetSpeedup(inputfile, option, M, K, csKB, nrep, isTest, skHd, alpha, beta, 
+   a(inputfile, option, M, K, csKB, nrep, isTest, skHd, alpha, beta, 
          tkern);
+   printf("***Redirect Successful!");
    return 0;
 }
