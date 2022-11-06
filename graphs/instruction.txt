@@ -1,0 +1,14 @@
+Say u have 2 programs foo1.c and foo2.c
+
+Step1: create .o of both
+
+     gcc -Wall -fPIC -c foo1.c
+
+     gcc -Wall -fPIC -c foo2.c
+
+Step2: create .so from above object files
+
+   gcc -shared -o libfoo.so foo1.o foo2.o
+   
+Generate visualization:
+	make -Bnd | ./make2graph | dot -Tsvg -o out.svg

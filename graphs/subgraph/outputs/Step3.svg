@@ -1,0 +1,274 @@
+<svg width="622" height="487" viewBox="0 0 963.48 454" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="translate(3.999980468749982,450.0000073242186) scale(1)">
+<title>G</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-450 959.48,-450 959.48,4 -4,4"/>
+<!-- n2 --><g id="clust1" class="cluster">
+<title>cluster_right</title>
+<polygon fill="none" stroke="black" points="877.48,-116 877.48,-168 947.48,-168 947.48,-116 877.48,-116"/>
+</g>
+<g id="node1" class="node">
+<title>n2</title>
+<ellipse fill="none" stroke="red" cx="912.48" cy="-142" rx="27" ry="18"/>
+<text text-anchor="middle" x="912.48" y="-137.8" font-family="Times,serif" font-size="14">all</text>
+</g><g id="clust2" class="cluster">
+<title>cluster_mid_left</title>
+<polygon fill="none" stroke="black" points="259.68,-8 259.68,-438 561.2,-438 561.2,-8 259.68,-8"/>
+</g>
+<!-- n8 --><g id="clust3" class="cluster">
+<title>cluster_mid_right</title>
+<polygon fill="none" stroke="black" points="581.2,-116 581.2,-168 857.48,-168 857.48,-116 581.2,-116"/>
+</g>
+<g id="clust4" class="cluster">
+<title>cluster_left</title>
+<polygon fill="none" stroke="black" points="8,-8 8,-330 239.68,-330 239.68,-8 8,-8"/>
+</g>
+<!-- n15 -->
+
+<!-- n8&#45;&gt;n15 -->
+<g id="node2" class="node">
+<title>n8</title>
+<ellipse fill="none" stroke="blue" cx="410.44" cy="-88" rx="89.79" ry="18"/>
+<text text-anchor="middle" x="410.44" y="-83.80000000000001" font-family="Times,serif" font-size="14.00">bin/sFusedMM_pt.o</text>
+</g>
+<!-- n3 -->
+
+<!-- n8&#45;&gt;n3 -->
+
+<!-- n19 -->
+
+<!-- n8&#45;&gt;n19 -->
+<g id="node4" class="node">
+<title>n4</title>
+<ellipse fill="none" stroke="blue" cx="410.44" cy="-196" rx="125.66" ry="18"/>
+<text text-anchor="middle" x="410.44" y="-191.8" font-family="Times,serif" font-size="14.00">bin/sFusedMMtime_gcn_pt.o</text>
+</g>
+<!-- n13 -->
+<g id="node5" class="node">
+<title>n20</title>
+<ellipse fill="none" stroke="blue" cx="410.44" cy="-412" rx="142.52" ry="18"/>
+<text text-anchor="middle" x="410.44" y="-407.8" font-family="Times,serif" font-size="14.00">bin/sFusedMMtime_sigmoid_pt.o</text>
+</g>
+<!-- n8&#45;&gt;n13 -->
+<g id="node6" class="node">
+<title>n14</title>
+<ellipse fill="none" stroke="blue" cx="410.44" cy="-358" rx="135.49" ry="18"/>
+<text text-anchor="middle" x="410.44" y="-353.8" font-family="Times,serif" font-size="14.00">bin/sFusedMMtime_spmm_pt.o</text>
+</g>
+<!-- n17 -->
+<g id="node7" class="node">
+<title>n18</title>
+<ellipse fill="none" stroke="blue" cx="410.44" cy="-304" rx="128.05" ry="18"/>
+<text text-anchor="middle" x="410.44" y="-299.8" font-family="Times,serif" font-size="14.00">bin/sFusedMMtime_tdist_pt.o</text>
+</g>
+<!-- n8&#45;&gt;n17 -->
+
+<!-- n16 -->
+<g id="node3" class="node">
+<title>n16</title>
+<ellipse fill="none" stroke="blue" cx="410.44" cy="-250" rx="118.14" ry="18"/>
+<text text-anchor="middle" x="410.44" y="-245.8" font-family="Times,serif" font-size="14">bin/sFusedMMtime_fr_pt.o</text>
+</g>
+<!-- n16&#45;&gt;n15 -->
+
+<!-- n24 -->
+<g id="node10" class="node">
+<title>n24</title>
+<ellipse fill="none" stroke="rgb(255, 0, 0)" cx="719.34" cy="-142" rx="130.28" ry="18"/>
+<text text-anchor="middle" x="719.34" y="-137.8" font-family="Times,serif" font-size="14">bin/xsOptFusedMMtime_fr_pt</text>
+</g>
+<!-- n16&#45;&gt;n24 -->
+<g id="edge23" class="edge">
+<title>n16-&gt;n24</title>
+<path fill="none" stroke="black" d="M500.85,-238.37C520.99,-234.52 542.06,-229.49 561.2,-223 604.58,-208.28 650.8,-183.19 681.79,-164.82"/>
+<polygon fill="black" stroke="black" points="683.73,-167.74 690.51,-159.6 680.14,-161.74 683.73,-167.74"/>
+</g>
+<!-- n4 -->
+
+<!-- n4&#45;&gt;n3 -->
+<g id="edge2" class="edge">
+<title>n9-&gt;n8</title>
+<path fill="none" stroke="black" d="M179.72,-88C216.73,-88 266.63,-88 310.46,-88"/>
+<polygon fill="black" stroke="black" points="310.59,-91.5 320.59,-88 310.59,-84.5 310.59,-91.5"/>
+</g>
+<!-- n21 -->
+
+<!-- n4&#45;&gt;n21 -->
+
+<!-- n20 -->
+<g id="edge3" class="edge">
+<title>n6-&gt;n8</title>
+<path fill="none" stroke="black" d="M179.87,-193.9C200.71,-190.54 223.33,-183.44 239.68,-169 258.87,-152.06 240.06,-131.43 259.68,-115 274.1,-102.92 292.09,-95.47 310.54,-91.01"/>
+<polygon fill="black" stroke="black" points="311.46,-94.4 320.51,-88.89 310,-87.55 311.46,-94.4"/>
+</g>
+<!-- n20&#45;&gt;n19 -->
+
+
+<g id="edge8" class="edge">
+<title>n6-&gt;n4</title>
+<path fill="none" stroke="black" d="M180.39,-196C207.44,-196 241.25,-196 274.52,-196"/>
+<polygon fill="black" stroke="black" points="274.82,-199.5 284.82,-196 274.82,-192.5 274.82,-199.5"/>
+</g>
+
+<g id="edge11" class="edge">
+<title>n6-&gt;n20</title>
+<path fill="none" stroke="black" d="M180.5,-196.09C201.95,-199.09 224.84,-206.46 239.68,-223 288.14,-276.99 209.83,-332.3 259.68,-385 264.56,-390.16 270.07,-394.53 276.01,-398.23"/>
+<polygon fill="black" stroke="black" points="274.57,-401.43 285.02,-403.17 277.94,-395.29 274.57,-401.43"/>
+</g>
+<g id="node8" class="node">
+<title>n22</title>
+<ellipse fill="none" stroke="blue" cx="410.44" cy="-142" rx="104.26" ry="18"/>
+<text text-anchor="middle" x="410.44" y="-137.8" font-family="Times,serif" font-size="14">bin/sOptFusedMM_pt.o</text>
+</g><g id="edge25" class="edge">
+<title>n11-&gt;n24</title>
+<path fill="none" stroke="black" d="M505.2,-46.48C524.01,-50.21 543.44,-54.97 561.2,-61 604.58,-75.72 650.8,-100.81 681.79,-119.18"/>
+<polygon fill="black" stroke="black" points="680.14,-122.26 690.51,-124.4 683.73,-116.26 680.14,-122.26"/>
+</g><g id="edge1" class="edge">
+<title>n24-&gt;n2</title>
+<path fill="none" stroke="black" d="M849.69,-142C858.78,-142 867.41,-142 875.17,-142"/>
+<polygon fill="black" stroke="black" points="875.19,-145.5 885.19,-142 875.19,-138.5 875.19,-145.5"/>
+</g><g id="node11" class="node">
+<title>n9</title>
+<ellipse fill="none" stroke="forestgreen" cx="123.84" cy="-88" rx="55.65" ry="18"/>
+<text text-anchor="middle" x="123.84" y="-83.8" font-family="Times,serif" font-size="14">fusedMM.c</text>
+</g><g id="edge20" class="edge">
+<title>n9-&gt;n22</title>
+<path fill="none" stroke="black" d="M171.29,-97.53C197.27,-102.8 230.25,-109.4 259.68,-115 281.51,-119.15 305.17,-123.49 327.09,-127.45"/>
+<polygon fill="black" stroke="black" points="326.56,-130.91 337.03,-129.23 327.8,-124.02 326.56,-130.91"/>
+</g><g id="node12" class="node">
+<title>n6</title>
+<ellipse fill="none" stroke="forestgreen" cx="123.84" cy="-196" rx="56.24" ry="18"/>
+<text text-anchor="middle" x="123.84" y="-191.8" font-family="Times,serif" font-size="14">fusedMM.h</text>
+</g><g id="edge5" class="edge">
+<title>n6-&gt;n16</title>
+<path fill="none" stroke="black" d="M171.6,-205.59C197.53,-210.85 230.37,-217.42 259.68,-223 279.98,-226.86 301.85,-230.88 322.44,-234.61"/>
+<polygon fill="black" stroke="black" points="321.97,-238.08 332.43,-236.41 323.21,-231.19 321.97,-238.08"/>
+</g><!-- n6&#45;&gt;n14 -->
+<g id="edge14" class="edge">
+<title>n6-&gt;n14</title>
+<path fill="none" stroke="black" d="M180.31,-196.58C201.6,-199.68 224.42,-206.99 239.68,-223 273.37,-258.33 225.08,-296.56 259.68,-331 265.54,-336.83 272.21,-341.64 279.39,-345.59"/>
+<polygon fill="black" stroke="black" points="278.23,-348.92 288.75,-350.15 281.29,-342.62 278.23,-348.92"/>
+</g>
+<!-- n6&#45;&gt;n18 -->
+<g id="edge17" class="edge">
+<title>n6-&gt;n18</title>
+<path fill="none" stroke="black" d="M179.87,-198.1C200.71,-201.46 223.33,-208.56 239.68,-223 258.87,-239.94 240.06,-260.57 259.68,-277 267.2,-283.3 275.68,-288.33 284.7,-292.34"/>
+<polygon fill="black" stroke="black" points="283.68,-295.71 294.26,-296.16 286.27,-289.21 283.68,-295.71"/>
+</g>
+<!-- n6&#45;&gt;n22 -->
+<g id="edge21" class="edge">
+<title>n6-&gt;n22</title>
+<path fill="none" stroke="black" d="M171.6,-186.41C197.53,-181.15 230.37,-174.58 259.68,-169 281.51,-164.85 305.17,-160.51 327.09,-156.55"/>
+<polygon fill="black" stroke="black" points="327.8,-159.98 337.03,-154.77 326.56,-153.09 327.8,-159.98"/>
+</g>
+<!-- n10 -->
+<g id="node13" class="node">
+<title>n10</title>
+<ellipse fill="none" stroke="forestgreen" cx="123.84" cy="-142" rx="90.88" ry="18"/>
+<text text-anchor="middle" x="123.84" y="-137.8" font-family="Times,serif" font-size="14">fusedMM_internal.h</text>
+</g>
+<!-- n10&#45;&gt;n8 -->
+<g id="edge4" class="edge">
+<title>n10-&gt;n8</title>
+<path fill="none" stroke="black" d="M187.56,-129.18C210.27,-124.61 236.11,-119.48 259.68,-115 283.3,-110.51 309.05,-105.8 332.43,-101.59"/>
+<polygon fill="black" stroke="black" points="333.07,-105.03 342.3,-99.82 331.84,-98.14 333.07,-105.03"/>
+</g>
+<!-- n10&#45;&gt;n22 -->
+<g id="edge22" class="edge">
+<title>n10-&gt;n22</title>
+<path fill="none" stroke="black" d="M214.89,-142C240.59,-142 268.94,-142 295.85,-142"/>
+<polygon fill="black" stroke="black" points="296.09,-145.5 306.09,-142 296.09,-138.5 296.09,-145.5"/>
+</g>
+<!-- n7 -->
+<g id="node14" class="node">
+<title>n7</title>
+<ellipse fill="none" stroke="forestgreen" cx="123.84" cy="-304" rx="107.68" ry="18"/>
+<text text-anchor="middle" x="123.84" y="-299.8" font-family="Times,serif" font-size="14">kernels/include/kernels.h</text>
+</g><g id="edge24" class="edge">
+<title>n22-&gt;n24</title>
+<path fill="none" stroke="black" d="M514.92,-142C535.5,-142 557.42,-142 578.98,-142"/>
+<polygon fill="black" stroke="black" points="579.18,-145.5 589.18,-142 579.18,-138.5 579.18,-145.5"/>
+</g><g id="node9" class="node">
+<title>n11</title>
+<ellipse fill="none" stroke="blue" cx="410.44" cy="-34" rx="130.29" ry="18"/>
+<text text-anchor="middle" x="410.44" y="-29.80000000000001" font-family="Times,serif" font-size="14">kernels/lib/slibgfusedMM_pt.a</text>
+</g>
+<!-- n7&#45;&gt;n16 -->
+<g id="edge6" class="edge">
+<title>n7-&gt;n16</title>
+<path fill="none" stroke="black" d="M193.04,-290.08C214.37,-285.8 237.99,-281.13 259.68,-277 279.98,-273.14 301.85,-269.12 322.44,-265.39"/>
+<polygon fill="black" stroke="black" points="323.21,-268.81 332.43,-263.59 321.97,-261.92 323.21,-268.81"/>
+</g>
+<!-- n7&#45;&gt;n4 -->
+<g id="edge9" class="edge">
+<title>n7-&gt;n4</title>
+<path fill="none" stroke="black" d="M211.9,-293.44C222.04,-289.45 231.62,-284.12 239.68,-277 258.87,-260.06 240.06,-239.43 259.68,-223 267.51,-216.45 276.38,-211.26 285.8,-207.17"/>
+<polygon fill="black" stroke="black" points="287.34,-210.32 295.4,-203.44 284.81,-203.8 287.34,-210.32"/>
+</g>
+<!-- n7&#45;&gt;n20 -->
+<g id="edge12" class="edge">
+<title>n7-&gt;n20</title>
+<path fill="none" stroke="black" d="M148.33,-321.76C174.21,-340.43 217.76,-369.24 259.68,-385 272.32,-389.75 285.88,-393.68 299.49,-396.93"/>
+<polygon fill="black" stroke="black" points="298.86,-400.38 309.39,-399.18 300.41,-393.55 298.86,-400.38"/>
+</g>
+<!-- n7&#45;&gt;n14 -->
+<g id="edge15" class="edge">
+<title>n7-&gt;n14</title>
+<path fill="none" stroke="black" d="M193.04,-317.92C214.37,-322.2 237.99,-326.87 259.68,-331 278.58,-334.59 298.84,-338.33 318.16,-341.83"/>
+<polygon fill="black" stroke="black" points="317.71,-345.31 328.17,-343.64 318.95,-338.42 317.71,-345.31"/>
+</g>
+<!-- n7&#45;&gt;n18 -->
+<g id="edge18" class="edge">
+<title>n7-&gt;n18</title>
+<path fill="none" stroke="black" d="M232.03,-304C244.96,-304 258.31,-304 271.6,-304"/>
+<polygon fill="black" stroke="black" points="271.75,-307.5 281.75,-304 271.75,-300.5 271.75,-307.5"/>
+</g>
+<!-- n12 -->
+<g id="node15" class="node">
+<title>n12</title>
+<ellipse fill="none" stroke="forestgreen" cx="123.84" cy="-34" rx="79.35" ry="18"/>
+<text text-anchor="middle" x="123.84" y="-29.80000000000001" font-family="Times,serif" font-size="14">kernels/rungen.sh</text>
+</g>
+<!-- n12&#45;&gt;n11 -->
+<g id="edge26" class="edge">
+<title>n12-&gt;n11</title>
+<path fill="none" stroke="black" d="M203.36,-34C224,-34 246.9,-34 269.7,-34"/>
+<polygon fill="black" stroke="black" points="269.82,-37.5 279.82,-34 269.82,-30.5 269.82,-37.5"/>
+</g>
+<!-- n5 -->
+<g id="node16" class="node">
+<title>n5</title>
+<ellipse fill="none" stroke="forestgreen" cx="123.84" cy="-250" rx="98.98" ry="18"/>
+<text text-anchor="middle" x="123.84" y="-245.8" font-family="Times,serif" font-size="14">test/fusedMMtime.cpp</text>
+</g>
+<!-- n5&#45;&gt;n16 -->
+<g id="edge7" class="edge">
+<title>n5-&gt;n16</title>
+<path fill="none" stroke="black" d="M222.78,-250C241.9,-250 262.21,-250 282.12,-250"/>
+<polygon fill="black" stroke="black" points="282.17,-253.5 292.17,-250 282.17,-246.5 282.17,-253.5"/>
+</g>
+<!-- n5&#45;&gt;n4 -->
+<g id="edge10" class="edge">
+<title>n5-&gt;n4</title>
+<path fill="none" stroke="black" d="M190.29,-236.63C212.32,-232.2 237.05,-227.31 259.68,-223 279.33,-219.26 300.46,-215.37 320.47,-211.75"/>
+<polygon fill="black" stroke="black" points="321.28,-215.16 330.5,-209.94 320.04,-208.27 321.28,-215.16"/>
+</g>
+<!-- n5&#45;&gt;n20 -->
+<g id="edge13" class="edge">
+<title>n5-&gt;n20</title>
+<path fill="none" stroke="black" d="M211.11,-258.49C221.82,-262.74 231.77,-268.7 239.68,-277 273.37,-312.33 225.08,-350.56 259.68,-385 264.96,-390.25 270.89,-394.68 277.27,-398.39"/>
+<polygon fill="black" stroke="black" points="275.73,-401.54 286.22,-403.02 278.95,-395.32 275.73,-401.54"/>
+</g>
+<!-- n5&#45;&gt;n14 -->
+<g id="edge16" class="edge">
+<title>n5-&gt;n14</title>
+<path fill="none" stroke="black" d="M208.69,-259.36C220.02,-263.45 230.78,-269.14 239.68,-277 258.87,-293.94 240.06,-314.57 259.68,-331 266.53,-336.73 274.17,-341.42 282.29,-345.24"/>
+<polygon fill="black" stroke="black" points="281.06,-348.52 291.63,-349.2 283.79,-342.08 281.06,-348.52"/>
+</g>
+<!-- n5&#45;&gt;n18 -->
+<g id="edge19" class="edge">
+<title>n5-&gt;n18</title>
+<path fill="none" stroke="black" d="M190.29,-263.37C212.32,-267.8 237.05,-272.69 259.68,-277 279.11,-280.7 299.98,-284.54 319.79,-288.13"/>
+<polygon fill="black" stroke="black" points="319.26,-291.59 329.73,-289.92 320.51,-284.7 319.26,-291.59"/>
+</g>
+</g>
+</svg>

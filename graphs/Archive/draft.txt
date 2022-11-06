@@ -1,0 +1,12 @@
+
+$(BIN)/$(pre)FusedMMtime_fr_pt.o: $(Tdir)/fusedMMtime.cpp fusedMM.h $(KINCdir)/kernels.h  
+	mkdir -p $(BIN)
+	$(CPP) $(CPPFLAGS) $(TYPFLAGS) -I$(KINCdir) -DFR_UDEF \
+	   -DCPP $(MYPT_FLAG) -c $(Tdir)/fusedMMtime.cpp -o $@   
+---
+ptLIBS=$(KLIBdir)/$(pre)libgfusedMM_pt.a 
+
+$(BIN)/x$(pre)OptFusedMMtime_fr_pt: $(BIN)/$(pre)FusedMMtime_fr_pt.o $(BIN)/$(pre)OptFusedMM_pt.o $(ptLIBS)  
+	$(CPP) $(CPPFLAGS) -o $@ $^ $(ptLIBS) -lm
+---
+xsOptFusedMMtime_fr_pt

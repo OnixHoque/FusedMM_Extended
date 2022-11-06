@@ -1,0 +1,51 @@
+digraph G {
+rankdir=LR;
+    overlap=false
+    beautify=true
+    spline=true
+subgraph cluster_right {
+n2[label="all", color="red"];    
+}
+
+subgraph cluster_mid_left {
+
+n22[label="bin/sOptFusedMM_pt.o", color="blue"];
+n16[label="bin/sFusedMMtime_fr_pt.o", color="blue"];
+n11[label="kernels/lib/slibgfusedMM_pt.a", color="blue"];
+}
+
+subgraph cluster_mid_right {
+    
+    n24[label="bin/xsOptFusedMMtime_fr_pt", color="red"];
+    
+}
+
+subgraph cluster_left{
+n9[label="fusedMM.c", color="forestgreen"];
+n6[label="fusedMM.h", color="forestgreen"];
+n10[label="fusedMM_internal.h", color="forestgreen"];
+n7[label="kernels/include/kernels.h", color="forestgreen"];
+n12[label="kernels/rungen.sh", color="forestgreen"];
+n5[label="test/fusedMMtime.cpp", color="forestgreen"];
+}
+ 
+n24 -> n2 ; 
+ 
+ 
+n6 -> n16 ; 
+n7 -> n16 ; 
+n5 -> n16 ; 
+
+
+
+n9 -> n22 ; 
+n6 -> n22 ; 
+n10 -> n22 ; 
+
+
+n16 -> n24 ; 
+n22 -> n24 ; 
+n11 -> n24 ; 
+  
+n12 -> n11 ; 
+}
