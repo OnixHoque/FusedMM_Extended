@@ -1,0 +1,12 @@
+ar rcs libmyfusedmm.a *.o
+
+gcc -L. -shared -o libmyfusedmm_shared.so -Wl,--whole-archive libmyfusedmm.a -Wl,--no-whole-archive -Wl,-rpath='.'
+
+g++ -fopenmp -O3 -march=native -std=c++11 -o xsOptFusedMMtime_fr_pt sFusedMMtime_fr_pt.o -L. -lmyfusedmm_shared  -lm
+
+cp libmyfusedmm_shared.so ~/Desktop/Projects/libmyfusedmm_shared.so
+
+LD_LIBRARY_PATH=~/Desktop/Projects/
+export LD_LIBRARY_PATH
+
+./xsOptFusedMMtime_fr_pt -input sample.mtx 
