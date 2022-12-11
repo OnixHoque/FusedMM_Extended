@@ -39,8 +39,8 @@
 #     -O3 -mavx512f -mavx512dq 
 #     -O3 -march=armv8-a
 #  ---------------------------------------
-   KCC = 
-   KCCFLAGS = 
+   KCC = gcc
+   KCCFLAGS = -O3 -mavx -mfma -fPIC
 #  -----------------------------------------------------
 #  Architecture related, we will probe the system later 
 #  See $(INCSdir)/simd.h for details
@@ -69,7 +69,7 @@ pre =
 ibit=64
 
 # dimension or value of compile-time K, mdim = max dimension  
-mdim = 128
+mdim = 32
 dim = 4
 nthds =  
 # Register blocking strategy: 
@@ -78,8 +78,8 @@ nthds =
 #regblk=acrb
 regblk=crb
 
-kruntime=0
-bestK=64    # needed when kruntime = 1
+kruntime=1
+bestK=32    # needed when kruntime = 1
 
 @declare "header: " y n 
 @multidef  kn sigmoid tdist spmm gcn
@@ -179,10 +179,10 @@ regblk=bacrb
 #   K, we should use K-runtime but after tuning the bestK 
 #
 #kruntime=0
-mdim=1024 
+mdim=32 
 
-kruntime=1   # 0 means K compile time, used in tuning phase  
-bestK=512    # needed when kruntime=1, normally got from tuning step  
+kruntime=0   # 0 means K compile time, used in tuning phase  
+bestK=32    # needed when kruntime=1, normally got from tuning step  
 
 kern=s   # t = tdist/fr, s = sigmoid, m = spmm, g = gcn 
 data=dataset/harvard.mtx      
@@ -208,10 +208,10 @@ KINCS=$(KINCdir)/kernels.h
 # tester/timer's compiler 
 #
 CC = gcc
-CCFLAGS = -fopenmp -O3 -march=native 
+CCFLAGS = -fopenmp -O3 -march=native -fPIC
 
 CPP = g++
-CPPFLAGS = -fopenmp -O3 -march=native -std=c++11
+CPPFLAGS = -fopenmp -O3 -march=native -std=c++11 -fPIC
 
 #
 # My parallel flags 
