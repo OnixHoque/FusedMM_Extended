@@ -6,6 +6,8 @@
 #include<stdio.h>
 #include <omp.h>
 #include"kernels/include/kernels.h"
+
+#define ENABLE_OPT_FUSEDMM 1
 #ifdef DREAL
    #define VALUETYPE double
 #else
@@ -508,6 +510,7 @@ int fusedMM_csr
 )
 {
    int status = 0;
+   // printf("\nOptimize option: %d \n", ENABLE_OPT_FUSEDMM);
 
 #ifdef ENABLE_OPT_FUSEDMM
 /* ============================================================================

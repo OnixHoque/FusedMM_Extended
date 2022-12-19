@@ -1835,7 +1835,7 @@ void GetFlags(int narg, char **argv, string &inputfile, int &option,
  * default values 
  */
    option = 1; 
-   inputfile = "";
+   inputfile = "sample.mtx";
    K = 128; 
    M = 0;
 /*
@@ -1952,16 +1952,253 @@ void GetFlags(int narg, char **argv, string &inputfile, int &option,
       beta = 1.0;
 
 }
+
+
+void b
+(
+   CSR<INDEXTYPE,VALUETYPE> &S, 
+   INDEXTYPE M, 
+   INDEXTYPE N, 
+   INDEXTYPE K, 
+   VALUETYPE alpha, 
+   VALUETYPE beta,
+   int tkern
+)
+{
+   int nerr, szAligned; 
+   size_t i, j, szA, szB, szC, lda, ldc, ldb; 
+   VALUETYPE *pb, *b, *pc0, *c0, *pc, *c, *pa, *a, *values;
+
+   std::default_random_engine generator;
+   std::uniform_real_distribution<VALUETYPE> distribution(0.0,1.0);
+/*
+ * NOTE: we are considering only row major A, B and C storage now
+ *       A -> MxK, B->NxK, C->MxD  
+ */
+   lda = ldb = ldc = K; // both row major, K multiple of VLEN 
+/*
+ * NOTE: not sure about system's VLEN from this user code. So, make it cacheline
+ * size aligned ....
+ */
+   szAligned = ATL_Cachelen / sizeof(VALUETYPE);
+   szA = ((M*ldb+szAligned-1)/szAligned)*szAligned;  // szB in element
+   szB = ((N*ldb+szAligned-1)/szAligned)*szAligned;  // szB in element
+   szC = ((M*ldc+szAligned-1)/szAligned)*szAligned;  // szC in element 
+   
+   pa = (VALUETYPE*)malloc(szA*sizeof(VALUETYPE)+2*ATL_Cachelen);
+   assert(pa);
+   a = (VALUETYPE*) ATL_AlignPtr(pa);
+   
+   pb = (VALUETYPE*)malloc(szB*sizeof(VALUETYPE)+2*ATL_Cachelen);
+   assert(pb);
+   b = (VALUETYPE*) ATL_AlignPtr(pb);
+
+   pc0 = (VALUETYPE*)malloc(szC*sizeof(VALUETYPE)+2*ATL_Cachelen);
+   assert(pc0);
+   c0 = (VALUETYPE*) ATL_AlignPtr(pc0); 
+      
+   pc = (VALUETYPE*)malloc(szC*sizeof(VALUETYPE)+2*ATL_Cachelen);
+   assert(pc);
+   c = (VALUETYPE*) ATL_AlignPtr(pc); 
+   
+   // init   
+   for (i=0; i < szA; i++)
+   {
+      // a[i] = distribution(generator);  
+      a[i] = 0;  
+   }
+   for (i=0; i < szB; i++)
+   {
+      b[i] = 0;  
+   }
+
+   b[0] = 10; b[1] = 11; b[2] = 20;
+   b[3] = 21; b[4] = 30; b[5] = 31;
+   for (i=0; i < szC; i++)
+   {
+      c[i] = 0.0; c0[i] = 0.0;
+   }
+  
+   if (M > S.rows) M = S.rows; // M can't be greater than A.rows  
+/*
+ *    csr may consists all 1 as values... init with random values
+ */
+   values = (VALUETYPE*)malloc(S.nnz*sizeof(VALUETYPE));
+   assert(values);
+   
+   
+   printf("\nNNZ in S: $d %d %d\n", szA, szB, S.nnz);
+   // for (i=0; i < S.nnz; i++)
+   //    values[i] = 10;
+   values = S.values;
+
+   fprintf(stdout, "Applying test kernel\n");
+   mytest_csr('m', M, N, K, alpha, S.nnz, S.rows, S.cols, values, S.colids, S.rowptr, S.rowptr+1, a, lda, b, ldb, beta, c, ldc);   
+   printf("RESULT Matrix C: (Dimsension %d)\n", szC);
+   for (i=0; i < szC; i++)
+   {
+      printf("%f\t", c[i]);
+   }
+
+}
+
+void a(string inputfile, int option, INDEXTYPE M, 
+      INDEXTYPE K, int csKB, int nrep, int isTest, int skipHeader, 
+      VALUETYPE alpha, VALUETYPE beta, int tkern)
+{
+   int nerr, norandom;
+   INDEXTYPE i;
+   INDEXTYPE N, blkid; /* A->MxN, B-> NxD, C-> MxD */
+   vector <INDEXTYPE> rblkids;
+   CSR<INDEXTYPE, VALUETYPE> S_csr0; 
+   CSR<INDEXTYPE, VALUETYPE> S_csr1; 
+   CSC<INDEXTYPE, VALUETYPE> S_csc;
+   
+
+   SetInputMatricesAsCSC(S_csc, inputfile);
+   S_csc.Sorted(); 
+   N = S_csc.cols; 
+   
+   // generate CSR version of A  
+   S_csr0.make_empty(); 
+   S_csr0 = *(new CSR<INDEXTYPE, VALUETYPE>(S_csc));
+   S_csr0.Sorted();
+  /*
+   * check for valid M.
+   * NOTE: rows and cols of sparse matrix can be different 
+   */
+   if (!M || M > S_csr0.rows)
+      M = S_csr0.rows;
+/*
+ * test the result if mandated 
+ * NOTE: general notation: 
+ *          Sparse Matrix : S -> MxN 
+ *          Dense Matrix  : A->MxK B->NxK, C->MxK
+ */
+   assert(N && M && K);
+   b(S_csr0, M, N, K, alpha, beta, tkern);                 
+   
+
+}
+
+
+
+void performSpMM0()
+{
+   INDEXTYPE M = 0, K = 2;
+   VALUETYPE alpha = 1, beta = 0;
+   int option = 1, csKB = 25344, nrep = 1, isTest = 0, skHd = 0;
+   // int nrblk; Unused variable
+   char tkern = 'm';
+   string inputfile = "bin/sample.mtx"; 
+   // GetFlags(narg, argv, inputfile, option, M, K, csKB, nrep, isTest, skHd, alpha, beta, tkern);
+   a(inputfile, option, M, K, csKB, nrep, isTest, skHd, alpha, beta, tkern);
+}
+
+void SpMM
+(
+   const INDEXTYPE m,      // rows of A 
+   const INDEXTYPE n,      // rows of B
+   const INDEXTYPE k,      // dimension: col of A and B
+   const VALUETYPE alpha,  // not used yet  
+   const INDEXTYPE nnz,    // nonzeros  
+   const INDEXTYPE rows,   // number of rows for sparse matrix 
+   const INDEXTYPE cols,   // number of columns for sparse matrix 
+   const VALUETYPE *val,   // NNZ value  
+   const INDEXTYPE *indx,  // colids -> column indices 
+   const INDEXTYPE *pntrb, // starting index for rowptr
+   const INDEXTYPE *pntre, // ending index for rowptr
+   const VALUETYPE *a,     // Dense A (X) matrix
+   const INDEXTYPE lda,    // leading dimension of A (col size since A row-major)  
+   const VALUETYPE *b,     // Dense B matrix
+   const INDEXTYPE ldb,    // leading dimension of B (col size since B row-major)  
+   const VALUETYPE beta,   // beta value 
+   VALUETYPE *c,           // Dense matrix c
+   const INDEXTYPE ldc     // leading dimension of c (col size since C row-major) 
+)
+{
+   mytest_csr('m', m, n, k, alpha, nnz, rows, cols, val, indx, pntrb, pntre, a, lda, b, ldb, beta, c, ldc);
+}
+
+void performDummySpMM()
+{
+   printf("Performing Dummy SpMM...\n");
+   INDEXTYPE M = 2, N = 3, K = 2;
+   VALUETYPE alpha = 1, beta = 0;
+   int option = 1, csKB = 25344, nrep = 1, isTest = 0, skHd = 0;
+   char tkern = 'm';
+   int nerr, szAligned; 
+   size_t i, j, szA, szB, szC, lda, ldc, ldb; 
+   VALUETYPE *pb, *b, *pc0, *c0, *pc, *c, *pa, *a, *values;
+   lda = ldb = ldc = K; // both row major, K multiple of VLEN 
+
+
+/*
+ * NOTE: not sure about system's VLEN from this user code. So, make it cacheline
+ * size aligned ....
+ */
+   szAligned = ATL_Cachelen / sizeof(VALUETYPE);
+   szA = ((M*ldb+szAligned-1)/szAligned)*szAligned;  // szB in element
+   szB = ((N*ldb+szAligned-1)/szAligned)*szAligned;  // szB in element
+   szC = ((M*ldc+szAligned-1)/szAligned)*szAligned;  // szC in element 
+   
+   pa = (VALUETYPE*)calloc(szA,sizeof(VALUETYPE)+2*ATL_Cachelen);
+   assert(pa);
+   a = (VALUETYPE*) ATL_AlignPtr(pa);
+   
+   pb = (VALUETYPE*)calloc(szB,sizeof(VALUETYPE)+2*ATL_Cachelen);
+   assert(pb);
+   b = (VALUETYPE*) ATL_AlignPtr(pb);
+
+   pc0 = (VALUETYPE*)calloc(szC,sizeof(VALUETYPE)+2*ATL_Cachelen);
+   assert(pc0);
+   c0 = (VALUETYPE*) ATL_AlignPtr(pc0); 
+      
+   pc = (VALUETYPE*)calloc(szC,sizeof(VALUETYPE)+2*ATL_Cachelen);
+   assert(pc);
+   c = (VALUETYPE*) ATL_AlignPtr(pc); 
+   
+
+   b[0] = 10; b[1] = 11; b[2] = 20;
+   b[3] = 21; b[4] = 30; b[5] = 31;
+
+   
+   // if (M > S.rows) M = S.rows; // M can't be greater than A.rows  
+/*
+ *    csr may consists all 1 as values... init with random values
+ */
+
+   //====Sparse Matrix Declaration====
+   INDEXTYPE S_rows = 2;	
+	INDEXTYPE S_cols = 3;
+	INDEXTYPE S_nnz = 6; // number of nonzeros
+    
+   INDEXTYPE S_rowptr[] = {0, 3, 6};
+   INDEXTYPE S_colids[] = {0, 1, 2, 0, 1, 2};
+   VALUETYPE S_values[] = {1, 2, 3, 4, 5, 6};
+
+   // values = (VALUETYPE*)calloc(S.nnz*sizeof(VALUETYPE));
+
+   // assert(values);
+   
+   
+   // printf("\nNNZ in S: $d %d %d\n", szA, szB, S.nnz);
+
+   // fprintf(stdout, "Applying test kernel\n");
+   SpMM(M, N, K, alpha, S_nnz, S_rows, S_cols, S_values, S_colids, S_rowptr, S_rowptr+1, a, lda, b, ldb, beta, c, ldc);   
+   printf("RESULT Matrix C: (Dimsension %d)\n", szC);
+   for (i=0; i < szC; i++)
+   {
+      printf("%f\t", c[i]);
+   }
+
+
+}
+
 int main(int narg, char **argv)
 {
-   INDEXTYPE M, K;
-   VALUETYPE alpha, beta;
-   int option, csKB, nrep, isTest, skHd, nrblk;
-   char tkern;
-   string inputfile; 
-   GetFlags(narg, argv, inputfile, option, M, K, csKB, nrep, isTest, skHd, 
-            alpha, beta, tkern);
-   GetSpeedup(inputfile, option, M, K, csKB, nrep, isTest, skHd, alpha, beta, 
-         tkern);
+   // performSpMM();
+   performDummySpMM();
+   // GetSpeedup(inputfile, option, M, K, csKB, nrep, isTest, skHd, alpha, beta, tkern);
    return 0;
 }
