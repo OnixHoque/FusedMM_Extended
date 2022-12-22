@@ -7,7 +7,7 @@
 #include <omp.h>
 #include"kernels/include/kernels.h"
 
-#define ENABLE_OPT_FUSEDMM 1
+#define ENABLE_OPT_FUSEDMM 12
 #ifdef DREAL
    #define VALUETYPE double
 #else

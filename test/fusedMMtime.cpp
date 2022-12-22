@@ -2095,6 +2095,8 @@ void performSpMM0()
    a(inputfile, option, M, K, csKB, nrep, isTest, skHd, alpha, beta, tkern);
 }
 
+extern "C" {
+
 void SpMM
 (
    const INDEXTYPE m,      // rows of A 
@@ -2119,6 +2121,7 @@ void SpMM
 {
    mytest_csr('m', m, n, k, alpha, nnz, rows, cols, val, indx, pntrb, pntre, a, lda, b, ldb, beta, c, ldc);
 }
+
 
 void performDummySpMM()
 {
@@ -2192,6 +2195,8 @@ void performDummySpMM()
       printf("%f\t", c[i]);
    }
 
+
+}
 
 }
 

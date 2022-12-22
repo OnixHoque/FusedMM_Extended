@@ -69,10 +69,10 @@ KINCS=$(KINCdir)/kernels.h
 # tester/timer's compiler 
 #
 CC = gcc
-CCFLAGS = -fopenmp -O3 -march=native 
+CCFLAGS = -fopenmp -O3 -march=native -fPIC
 
 CPP = g++
-CPPFLAGS = -fopenmp -O3 -march=native -std=c++11
+CPPFLAGS = -fopenmp -O3 -march=native -std=c++11 -fPIC
 
 #
 # My parallel flags 

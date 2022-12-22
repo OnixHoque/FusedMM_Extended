@@ -28,7 +28,7 @@
 #  General purpose compiler 
 #  ---------------------------------------
    CC = gcc
-   CFLAGS = -O3 -w 
+   CFLAGS = -O3 -w -fPIC
 
 #  ----------------------------------------
 #  Kernel compiler (replaced by)
@@ -39,7 +39,7 @@
 #     -O3 -march=armv8-a
 #  ---------------------------------------
    KCC = gcc 
-   KCCFLAGS = -O3 -mavx -mfma 
+   KCCFLAGS = -O3 -mavx -mfma -fPIC
 #  -----------------------------------------------------
 #  Architecture related, we will probe the system later 
 #  See $(INCSdir)/simd.h for details
