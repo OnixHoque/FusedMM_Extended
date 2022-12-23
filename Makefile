@@ -108,22 +108,24 @@ LD_MKL_FLAG =  -Wl,--start-group ${MKLROOT}/lib/intel64/libmkl_intel_ilp64.a \
 # =============================================================================
 #  Default Target  
 # ==============================================================================
-all: $(BIN)/x$(pre)FusedMMtime_gcn_pt $(BIN)/x$(pre)FusedMMtime_spmm_pt \
-     $(BIN)/x$(pre)FusedMMtime_fr_pt $(BIN)/x$(pre)FusedMMtime_tdist_pt \
-     $(BIN)/x$(pre)FusedMMtime_sigmoid_pt $(BIN)/x$(pre)OptFusedMMtime_gcn_pt \
-     $(BIN)/x$(pre)OptFusedMMtime_spmm_pt $(BIN)/x$(pre)OptFusedMMtime_fr_pt \
-     $(BIN)/x$(pre)OptFusedMMtime_tdist_pt \
-     $(BIN)/x$(pre)OptFusedMMtime_sigmoid_pt
+all: $(BIN)/$(pre)OptFusedMM_pt.o $(ptLIBS) $(BIN)/$(pre)FusedMMtime_fr_pt.o
 
-test: $(BIN)/x$(pre)OptFusedMMtime_gcn_pt \
-      $(BIN)/x$(pre)OptFusedMMtime_spmm_pt $(BIN)/x$(pre)OptFusedMMtime_fr_pt \
-      $(BIN)/x$(pre)OptFusedMMtime_tdist_pt \
-      $(BIN)/x$(pre)OptFusedMMtime_sigmoid_pt
-	$(BIN)/x$(pre)OptFusedMMtime_gcn_pt -input $(data) -T 1 -K $(d)  
-	$(BIN)/x$(pre)OptFusedMMtime_spmm_pt -input $(data) -T 1 -K $(d)  
-	$(BIN)/x$(pre)OptFusedMMtime_fr_pt -input $(data) -T 1 -K $(d)  
-	$(BIN)/x$(pre)OptFusedMMtime_tdist_pt -input $(data) -T 1 -K $(d)  
-	$(BIN)/x$(pre)OptFusedMMtime_sigmoid_pt -input $(data) -T 1 -K $(d)  
+# all: $(BIN)/x$(pre)FusedMMtime_gcn_pt $(BIN)/x$(pre)FusedMMtime_spmm_pt \
+#      $(BIN)/x$(pre)FusedMMtime_fr_pt $(BIN)/x$(pre)FusedMMtime_tdist_pt \
+#      $(BIN)/x$(pre)FusedMMtime_sigmoid_pt $(BIN)/x$(pre)OptFusedMMtime_gcn_pt \
+#      $(BIN)/x$(pre)OptFusedMMtime_spmm_pt $(BIN)/x$(pre)OptFusedMMtime_fr_pt \
+#      $(BIN)/x$(pre)OptFusedMMtime_tdist_pt \
+#      $(BIN)/x$(pre)OptFusedMMtime_sigmoid_pt
+
+# test: $(BIN)/x$(pre)OptFusedMMtime_gcn_pt \
+#       $(BIN)/x$(pre)OptFusedMMtime_spmm_pt $(BIN)/x$(pre)OptFusedMMtime_fr_pt \
+#       $(BIN)/x$(pre)OptFusedMMtime_tdist_pt \
+#       $(BIN)/x$(pre)OptFusedMMtime_sigmoid_pt
+# 	$(BIN)/x$(pre)OptFusedMMtime_gcn_pt -input $(data) -T 1 -K $(d)  
+# 	$(BIN)/x$(pre)OptFusedMMtime_spmm_pt -input $(data) -T 1 -K $(d)  
+# 	$(BIN)/x$(pre)OptFusedMMtime_fr_pt -input $(data) -T 1 -K $(d)  
+# 	$(BIN)/x$(pre)OptFusedMMtime_tdist_pt -input $(data) -T 1 -K $(d)  
+# 	$(BIN)/x$(pre)OptFusedMMtime_sigmoid_pt -input $(data) -T 1 -K $(d)  
 
 
 # =============================================================================
