@@ -1,7 +1,7 @@
 import ctypes
 import numpy
 
-lib = ctypes.cdll.LoadLibrary('./shared_object/C/libmyfusedmm_shared.so')
+lib = ctypes.cdll.LoadLibrary('./shared_object/libmyfusedmm_shared.so')
 
 
 # lib.performDummySpMM()

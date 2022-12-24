@@ -282,37 +282,37 @@ void SpMM
    const INDEXTYPE ldc     // leading dimension of c (col size since C row-major) 
 )
 {
-   printf("=============Before calling:\n");
-   printf("S:\n");
-   for (int i = 0; i<6; i++)
-      printf("%f\t", val[i]);
+   // printf("=============Before calling:\n");
+   // printf("S:\n");
+   // for (int i = 0; i<6; i++)
+   //    printf("%f\t", val[i]);
 
-   printf("\n\nB:\n");
-   for (int i = 0; i<6; i++)
-      printf("%f\t", b[i]);
+   // printf("\n\nB:\n");
+   // for (int i = 0; i<6; i++)
+   //    printf("%f\t", b[i]);
    
-   printf("\n\nC:\n");
-   for (int i = 0; i<4; i++)
-      printf("%f\t", c[i]);
+   // printf("\n\nC:\n");
+   // for (int i = 0; i<4; i++)
+   //    printf("%f\t", c[i]);
    
-   printf("===============================\n\n");
+   // printf("===============================\n\n");
 
    mytest_csr('m', m, n, k, alpha, nnz, rows, cols, val, indx, pntrb, pntre, a, lda, b, ldb, beta, c, ldc);
 
-   printf("=============After calling:\n");
-   printf("S:\n");
-   for (int i = 0; i<6; i++)
-      printf("%f\t", val[i]);
+   // printf("=============After calling:\n");
+   // printf("S:\n");
+   // for (int i = 0; i<6; i++)
+   //    printf("%f\t", val[i]);
 
-   printf("\n\nB:\n");
-   for (int i = 0; i<6; i++)
-      printf("%f\t", b[i]);
+   // printf("\n\nB:\n");
+   // for (int i = 0; i<6; i++)
+   //    printf("%f\t", b[i]);
    
-   printf("\n\nC:\n");
-   for (int i = 0; i<4; i++)
-      printf("%f\t", c[i]);
+   // printf("\n\nC:\n");
+   // for (int i = 0; i<4; i++)
+   //    printf("%f\t", c[i]);
    
-   printf("===============================\n\n");
+   // printf("===============================\n\n");
 }
 
 
