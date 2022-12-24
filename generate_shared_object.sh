@@ -1,4 +1,4 @@
-rmdir -fdr ./shared_object
+rm -fdr ./shared_object
 make
 mkdir -p ./shared_object
 

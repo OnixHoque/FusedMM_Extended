@@ -1,10 +1,10 @@
 import ctypes
-import numpy
 
 lib = ctypes.cdll.LoadLibrary('./shared_object/libmyfusedmm_shared.so')
 
 
 # lib.performDummySpMM()
+
 # Peforms this mm: https://miro.medium.com/max/1400/1*YGcMQSr0ge_DGn96WnEkZw.png
 
 # SpMM Function=============
@@ -50,6 +50,9 @@ for i in range(szC):
     if ((i + 1) % M == 0):
         print("")
 
+
+
+# import numpy
 # S_rowptr = numpy.array([0, 3, 6], dtype=numpy.int64).ctypes.data_as(ctypes.POINTER(ctypes.c_longlong))
 # S_rowptr1 = numpy.array([3, 6], dtype=numpy.int64).ctypes.data_as(ctypes.POINTER(ctypes.c_longlong))
 # S_colids = numpy.array([0, 1, 2, 0, 1, 2], dtype=numpy.int64).ctypes.data_as(ctypes.POINTER(ctypes.c_longlong))
