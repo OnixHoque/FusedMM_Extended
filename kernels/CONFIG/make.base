@@ -29,7 +29,7 @@
 #  General purpose compiler 
 #  ---------------------------------------
    CC = gcc
-   CFLAGS = -O3 -w 
+   CFLAGS = -O3 -w -fPIC
 
 #  ----------------------------------------
 #  Kernel compiler (replaced by)
@@ -184,7 +184,7 @@ mdim=1024
 kruntime=1   # 0 means K compile time, used in tuning phase  
 bestK=512    # needed when kruntime=1, normally got from tuning step  
 
-kern=s   # t = tdist/fr, s = sigmoid, m = spmm, g = gcn 
+kern=m   # t = tdist/fr, s = sigmoid, m = spmm, g = gcn 
 data=dataset/harvard.mtx      
 d=128 
 # =============================================================================
@@ -208,10 +208,10 @@ KINCS=$(KINCdir)/kernels.h
 # tester/timer's compiler 
 #
 CC = gcc
-CCFLAGS = -fopenmp -O3 -march=native 
+CCFLAGS = -fopenmp -O3 -march=native -fPIC
 
 CPP = g++
-CPPFLAGS = -fopenmp -O3 -march=native -std=c++11
+CPPFLAGS = -fopenmp -O3 -march=native -std=c++11 -fPIC
 
 #
 # My parallel flags 
@@ -247,34 +247,8 @@ LD_MKL_FLAG =  -Wl,--start-group ${MKLROOT}/lib/intel64/libmkl_intel_ilp64.a \
 # =============================================================================
 #  Default Target  
 # ==============================================================================
-@declare "all: " y n 
-@multidef fmm OptFusedMM FusedMM
-@whiledef fmm
-@multidef  kn sigmoid tdist fr spmm gcn
-   @whiledef kn
-           $(BIN)/x$(pre)@(fmm)time_@(kn)_pt
-   @endwhile
-@endwhile
-@enddeclare 
 
-@declare "test: " y n 
-@SKIP --- @multidef fmm OptFusedMM FusedMM
-@multidef fmm OptFusedMM 
-@whiledef fmm
-@multidef  kn sigmoid tdist fr spmm gcn
-   @whiledef kn
-           $(BIN)/x$(pre)@(fmm)time_@(kn)_pt
-   @endwhile
-@endwhile
-@enddeclare 
-@SKIP --- @multidef fmm OptFusedMM FusedMM
-@multidef fmm OptFusedMM 
-@whiledef fmm
-   @multidef  kn sigmoid tdist fr spmm gcn 
-   @whiledef kn
-	$(BIN)/x$(pre)@(fmm)time_@(kn)_pt -input $(data) -T 1 -K $(d)  
-   @endwhile
-@endwhile
+all: $(BIN)/$(pre)OptFusedMM_pt.o $(ptLIBS) $(BIN)/$(pre)FusedMMtime_fr_pt.o
 
 
 # =============================================================================
