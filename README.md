@@ -10,4 +10,4 @@ Shared Object of FusedMM that can be used with Python.
 - Run
     `./generate_shared_object.sh`
 - Run
-    `python test.py`
+    `python3 test.py`
