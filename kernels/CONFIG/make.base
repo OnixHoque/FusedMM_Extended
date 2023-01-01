@@ -248,7 +248,7 @@ LD_MKL_FLAG =  -Wl,--start-group ${MKLROOT}/lib/intel64/libmkl_intel_ilp64.a \
 #  Default Target  
 # ==============================================================================
 
-all: $(BIN)/$(pre)OptFusedMM_pt.o $(ptLIBS) $(BIN)/$(pre)FusedMMtime_fr_pt.o
+all: $(BIN)/$(pre)OptFusedMM_pt.o $(ptLIBS) $(BIN)/$(pre)FusedMMtime_spmm_pt.o
 
 
 # =============================================================================
