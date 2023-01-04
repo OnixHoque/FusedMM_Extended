@@ -17,4 +17,4 @@ cd ..
 ar rcs libmyfusedmm.a ./objects/*.o
 gcc -O3 -march=native -std=c++11 -shared -fPIC -o libmyfusedmm_shared.so -Wl,--whole-archive libmyfusedmm.a -Wl,--no-whole-archive -Wl,-rpath='./' -lm -fopenmp 
 
-echo "Shared object generated in ./shared_object folder. Run test.py to test SpMM."
+echo "Shared object generated in ./shared_object folder."
