@@ -18,6 +18,6 @@ OpenMP version >= 4.5
 - Run
     `./generate_shared_object.sh`
 - Run
-    `python test.py`
+    `python fusedmm.py`
 
 
