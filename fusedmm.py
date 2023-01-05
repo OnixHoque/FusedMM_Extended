@@ -1,9 +1,18 @@
 import ctypes
 import torch
 
-lib = ctypes.cdll.LoadLibrary('./shared_object/libmyfusedmm_shared.so')
+lib = ctypes.cdll.LoadLibrary('./libmyfusedmm_shared.so')
 lib.SpMM.argtypes = [ctypes.c_longlong, ctypes.c_longlong, ctypes.c_longlong, ctypes.c_float, ctypes.c_longlong, ctypes.c_longlong, ctypes.c_longlong, ctypes.POINTER(ctypes.c_float), ctypes.POINTER(ctypes.c_longlong), ctypes.POINTER(ctypes.c_longlong), ctypes.POINTER(ctypes.c_longlong), ctypes.POINTER(ctypes.c_float), ctypes.c_longlong, ctypes.POINTER(ctypes.c_float), ctypes.c_longlong, ctypes.c_float, ctypes.POINTER(ctypes.c_float), ctypes.c_longlong] 
 lib.SpMM.restype = ctypes.c_void_p
+lib.mytest_csr.argtypes = [ctypes.c_char, ctypes.c_longlong, ctypes.c_longlong, ctypes.c_longlong, ctypes.c_float, ctypes.c_longlong, ctypes.c_longlong, ctypes.c_longlong, ctypes.POINTER(ctypes.c_float), ctypes.POINTER(ctypes.c_longlong), ctypes.POINTER(ctypes.c_longlong), ctypes.POINTER(ctypes.c_longlong), ctypes.POINTER(ctypes.c_float), ctypes.c_longlong, ctypes.POINTER(ctypes.c_float), ctypes.c_longlong, ctypes.c_float, ctypes.POINTER(ctypes.c_float), ctypes.c_longlong] 
+lib.mytest_csr.restype = ctypes.c_void_p
+kernel_type = {
+    't-dist': ord('t'),
+    'fr': ord('f'),
+    'sigmoid': ord('s'),
+    'spmm': ord('m'),
+    'gcn': ord('g')
+}
 
 def csr_spmm_cpu(A_rowptr, A_colid, A_vals, B_dense):
     alpha = 1; beta = 0; tkern = 'm';  # Don't change
@@ -26,6 +35,7 @@ def csr_spmm_cpu(A_rowptr, A_colid, A_vals, B_dense):
 
     lda = ldb = ldc = K         # Note: ***ATL_Cachelen is not integrated yet***
 
+    #Sp = M x N
     szA = 1     # Unused for SpMM
     szB = N * K # Elements of B dense matrix
     szC = M * K # Elements of resultant C dense matrix
@@ -39,8 +49,9 @@ def csr_spmm_cpu(A_rowptr, A_colid, A_vals, B_dense):
     c_tensor = torch.zeros(szC)
     c = ctypes.cast(c_tensor.data_ptr(), ctypes.POINTER(ctypes.c_float))    # C Matrix, initally empty, to store result matrix
 
-    lib.SpMM(M, N, K, alpha, S_nnz, S_rows, S_cols, S_values, S_colids, S_rowptr, S_rowptr_plus_1, a, lda, b, ldb, beta, c, ldc)
-
+    # lib.SpMM(M, N, K, alpha, S_nnz, S_rows, S_cols, S_values, S_colids, S_rowptr, S_rowptr_plus_1, a, lda, b, ldb, beta, c, ldc)
+    lib.mytest_csr(kernel_type['spmm'], M, N, K, alpha, S_nnz, S_rows, S_cols, S_values, S_colids, S_rowptr, S_rowptr_plus_1, a, lda, b, ldb, beta, c, ldc)
+    
     return c_tensor.reshape(M, K)
 
 a_rowptr = torch.tensor([0, 3, 6], dtype=torch.int64)
