@@ -15,6 +15,8 @@ cd ./objects
 ar x slibgfusedmm_pt.a
 cd ..
 ar rcs libmyfusedmm.a ./objects/*.o
+cp libmyfusedmm.a ../pybind/
 gcc -O3 -march=native -std=c++11 -shared -fPIC -o libmyfusedmm_shared.so -Wl,--whole-archive libmyfusedmm.a -Wl,--no-whole-archive -Wl,-rpath='./' -lm -fopenmp 
 
 echo "Shared object generated in ./shared_object folder."
+echo "You can also use pybind. Go to './pybind' and run './pybind_make.sh' or 'pip install .'"
