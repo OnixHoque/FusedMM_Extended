@@ -1,10 +1,14 @@
 import ctypes
 import torch
 from scipy.sparse import coo_matrix
-
+import os
 import numpy as np
 
-lib = ctypes.cdll.LoadLibrary('./libmyfusedmm_shared.so')
+fusedmm_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'libmyfusedmm_shared.so')
+# print(fusedmm_path)
+# lib = ctypes.cdll.LoadLibrary('./libmyfusedmm_shared.so')
+lib = ctypes.cdll.LoadLibrary(fusedmm_path)
+
 lib.SpMM.argtypes = [ctypes.c_longlong, ctypes.c_longlong, ctypes.c_longlong, ctypes.c_float, ctypes.c_longlong, ctypes.c_longlong, ctypes.c_longlong, ctypes.POINTER(ctypes.c_float), ctypes.POINTER(ctypes.c_longlong), ctypes.POINTER(ctypes.c_longlong), ctypes.POINTER(ctypes.c_longlong), ctypes.POINTER(ctypes.c_float), ctypes.c_longlong, ctypes.POINTER(ctypes.c_float), ctypes.c_longlong, ctypes.c_float, ctypes.POINTER(ctypes.c_float), ctypes.c_longlong] 
 lib.SpMM.restype = ctypes.c_void_p
 lib.mytest_csr.argtypes = [ctypes.c_char, ctypes.c_longlong, ctypes.c_longlong, ctypes.c_longlong, ctypes.c_float, ctypes.c_longlong, ctypes.c_longlong, ctypes.c_longlong, ctypes.POINTER(ctypes.c_float), ctypes.POINTER(ctypes.c_longlong), ctypes.POINTER(ctypes.c_longlong), ctypes.POINTER(ctypes.c_longlong), ctypes.POINTER(ctypes.c_float), ctypes.c_longlong, ctypes.POINTER(ctypes.c_float), ctypes.c_longlong, ctypes.c_float, ctypes.POINTER(ctypes.c_float), ctypes.c_longlong] 
@@ -57,28 +61,26 @@ def spmm_fusedmm_v1(A_rowptr, A_colid, A_vals, B_dense):
     
     return c_tensor.reshape(M, K)
 
+def spmm_fusedmm_v2(idx, val, m, n, matrix):
+    csr = coo_matrix((val, idx), shape=(m,n), copy=False).tocsr(False)
+    return spmm_fusedmm_v1(torch.as_tensor(csr.indptr, dtype=torch.int64), torch.as_tensor(csr.indices, dtype=torch.int64), val, matrix)
+
+
+# # v-1 test: (CogDL Interface)
+##-----------------------------------
 # a_rowptr = torch.tensor([0, 3, 6], dtype=torch.int64)
 # a_colid = torch.tensor([0, 1, 2, 0, 1, 2], dtype=torch.int64)
 # a_vals = torch.tensor([1, 2, 3, 4, 5, 6], dtype=torch.float32)
 # b_dense = torch.tensor([[10, 11], [20, 21], [30, 31]], dtype=torch.float32)
-# c = csr_spmm_cpu(a_rowptr, a_colid, a_vals, b_dense)
+# c = spmm_fusedmm_v1(a_rowptr, a_colid, a_vals, b_dense)
+# print(c)
 
+## v-2 test: (Torch Sparse Interface)
+##-----------------------------------
+# index = torch.tensor([[0, 0, 1, 2, 2],
+#                       [0, 2, 1, 0, 1]])
+# value = torch.Tensor([1, 2, 4, 1, 3])
+# matrix = torch.Tensor([[1, 4], [2, 5], [3, 6]])
+# c = spmm_fusedmm_v2(index, value, 3, 3, matrix)
+# print(c)
 
-def spmm_fusedmm_v2(idx, val, m, n, matrix):
-    csr = coo_matrix((val, idx), shape=(m,n), copy=False).tocsr(False)
-    return spmm_fusedmm_v1(torch.as_tensor(csr.indptr, dtype=torch.int64), torch.as_tensor(csr.indices, dtype=torch.int64), val, matrix)
-    
-index = torch.tensor([[0, 0, 1, 2, 2],
-                      [0, 2, 1, 0, 1]])
-value = torch.Tensor([1, 2, 4, 1, 3])
-matrix = torch.Tensor([[1, 4], [2, 5], [3, 6]])
-
-c = spmm_fusedmm_v2(index, value, 3, 3, matrix)
-# tmp = coo_matrix((value, index), shape=(3,3), copy=False).tocsr(False)
-# print(tmp.indptr.dtype)
-# print(torch.as_tensor(tmp.indptr), torch.from_numpy(tmp.indices))
-# print(index[0].dtype)
-# print(torch.as_tensor(tmp.indptr), torch.from_numpy(tmp.indices))
-
-# print(index.dtype)
-print(c.shape)
