@@ -1,0 +1,8 @@
+/bin
+Makefile
+kernels/bin/
+kernels/generated/
+kernels/Make.inc
+kernels/Makefile
+kernels/rungen.sh
+kernels/lib/*.a

@@ -6,9 +6,6 @@
 #include<stdio.h>
 #include <omp.h>
 #include"kernels/include/kernels.h"
-
-#define ENABLE_OPT_FUSEDMM 1
-
 #ifdef DREAL
    #define VALUETYPE double
 #else
@@ -240,6 +237,7 @@ int KERN_VSC_MUL(INDEXTYPE rhs_dim, const VALUETYPE *rhs, VALUETYPE scal,
       return FUSEDMM_FAIL_RETURN; 
    }
 #endif
+   // printf("Kern calling");
    for (INDEXTYPE i = 0; i < rhs_dim; i++)
       out[i] = scal * rhs[i];
    
@@ -315,8 +313,99 @@ int KERN_AOP_MAX(INDEXTYPE rhs_dim, const VALUETYPE *rhs, INDEXTYPE out_dim,
       return FUSEDMM_FAIL_RETURN; 
    }
 #endif
-   for (INDEXTYPE i = 0; i < rhs_dim; i++)
-      out[i] = fmax (out[i], rhs[i]);
+   // int max_idx = 0;
+   // out[0] = rhs[0];
+   // printf("\nInside AOP_MAX, out: (%f, %f), first item: %f, second item: %f, rhs_dim: %d\n", out[0], out[1], rhs[0], rhs[1], rhs_dim);
+   for (INDEXTYPE i = 0; i < rhs_dim; i++){
+      // printf("\n\nprocessing: %f, %f\n", out[i], rhs[i]);
+      // out[i] = fmax (out[i], rhs[i]);
+      if (out[i] < rhs[i]) {
+         // max_idx = i;
+         out[i] = rhs[i];
+         // printf("\n\nmax index: %d\n", max_idx);
+         
+      }
+   }
+   // printf("Done\n");
+
+   
+
+   return FUSEDMM_SUCCESS_RETURN;
+}
+
+int KERN_AOP_MAX_ARG(INDEXTYPE rhs_dim, const VALUETYPE *rhs, INDEXTYPE out_dim, 
+      VALUETYPE *out, INDEXTYPE * out_arg, INDEXTYPE idx) 
+{
+#ifdef DEBUG 
+   if (rhs_dim != out_dim)
+   {
+      fprintf(stderr, "dimension of lhs and rhs are not same!!!");
+      return FUSEDMM_FAIL_RETURN; 
+   }
+#endif
+   // int max_idx = 0;
+   // out[0] = rhs[0];
+   // printf("\nInside AOP_MAX, out: (%f, %f), first item: %f, second item: %f, rhs_dim: %d\n", out[0], out[1], rhs[0], rhs[1], rhs_dim);
+   for (INDEXTYPE i = 0; i < rhs_dim; i++){
+      // printf("\n\nprocessing: %f, %f\n", out[i], rhs[i]);
+      // out[i] = fmax (out[i], rhs[i]);
+      if (out[i] < rhs[i]) {
+         // max_idx = i;
+         out_arg[i] = idx;
+         // printf("\n\nmax index: %d\n", max_idx);
+         
+      }
+      // out[i] /= 2;
+   }
+   // printf("Done\n");
+
+   
+
+   return FUSEDMM_SUCCESS_RETURN;
+}
+
+int KERN_AOP_MIN_ARG(INDEXTYPE rhs_dim, const VALUETYPE *rhs, INDEXTYPE out_dim, 
+      VALUETYPE *out, INDEXTYPE * out_arg, INDEXTYPE idx) 
+{
+#ifdef DEBUG 
+   if (rhs_dim != out_dim)
+   {
+      fprintf(stderr, "dimension of lhs and rhs are not same!!!");
+      return FUSEDMM_FAIL_RETURN; 
+   }
+#endif
+   // int max_idx = 0;
+   // out[0] = rhs[0];
+   // printf("\nInside AOP_MAX, out: (%f, %f), first item: %f, second item: %f, rhs_dim: %d\n", out[0], out[1], rhs[0], rhs[1], rhs_dim);
+   for (INDEXTYPE i = 0; i < rhs_dim; i++){
+      // printf("\n\nprocessing: %f, %f\n", out[i], rhs[i]);
+      // out[i] = fmax (out[i], rhs[i]);
+      if (out[i] > rhs[i]) {
+         // max_idx = i;
+         out_arg[i] = idx;
+         // printf("\n\nmax index: %d\n", max_idx);
+         
+      }
+      // out[i] /= 2;
+   }
+   // printf("Done\n");
+
+   
+
+   return FUSEDMM_SUCCESS_RETURN;
+}
+
+int KERN_AOP_NOOP_ARG(INDEXTYPE rhs_dim, const VALUETYPE *rhs, INDEXTYPE out_dim, 
+      VALUETYPE *out, INDEXTYPE * out_arg, INDEXTYPE idx) 
+{
+#ifdef DEBUG 
+   if (rhs_dim != out_dim)
+   {
+      fprintf(stderr, "dimension of lhs and rhs are not same!!!");
+      return FUSEDMM_FAIL_RETURN; 
+   }
+#endif
+   
    return FUSEDMM_SUCCESS_RETURN;
 }
 
@@ -450,6 +539,9 @@ FP_VSC_FUNC GetVSCFunc(int32_t msg)
       case VSC_ADD: 
          VSC_FUNC = KERN_VSC_ADD;
          break;
+      case VSC_MEAN: 
+         VSC_FUNC = KERN_VSC_MUL;
+         break;
       case VSC_UDEF: 
          VSC_FUNC = VSC_UDEF_FUNC;
          break;
@@ -487,6 +579,23 @@ FP_AOP_FUNC GetAOPFunc(int32_t msg)
    return(AOP_FUNC);
 }
 
+FP_AOP_ARG_FUNC GetAOPargFunc(int32_t msg)
+{
+   FP_AOP_ARG_FUNC AOParg_FUNC;
+   switch(msg)
+   {
+      case AOP_MIN: 
+         AOParg_FUNC = KERN_AOP_MIN_ARG;
+         break;
+      case AOP_MAX: 
+         AOParg_FUNC = KERN_AOP_MAX_ARG;
+         break;
+      default:
+         AOParg_FUNC = KERN_AOP_NOOP_ARG;
+   }
+   return(AOParg_FUNC);
+}
+
 int fusedMM_csr 
 (
    const int32_t imessage,    // message to dictate the operations  
@@ -507,7 +616,8 @@ int fusedMM_csr
    const INDEXTYPE ldy,       // leading dimension of Y   
    const VALUETYPE beta,      // beta value 
    VALUETYPE *z,              // Dense matrix Z
-   const INDEXTYPE ldz        // leading dimension size of z 
+   const INDEXTYPE ldz,        // leading dimension size of z 
+   INDEXTYPE *z_arg
 )
 {
    int status = 0;
@@ -547,6 +657,7 @@ int fusedMM_csr
          && GET_VSC_FLAG(imessage) == VSC_MUL 
          && GET_AOP_FLAG(imessage) == AOP_ADD)
    {
+      
       #ifdef DREAL 
       dgfusedMM_csr('m', m, n, k, alpha, nnz, rows, cols, val, 
               indx, pntrb, pntre, x, ldx, y, ldy, beta, z, ldz);   
@@ -626,6 +737,10 @@ int fusedMM_csr
    if(!VSC_FUNC)
       return FUSEDMM_VSC_FAIL_RETURN;
    
+   FP_AOP_ARG_FUNC AOParg_FUNC = GetAOPargFunc(GET_AOP_FLAG(imessage));
+   if(!AOParg_FUNC)
+      return FUSEDMM_AOP_FAIL_RETURN;
+   
    FP_AOP_FUNC AOP_FUNC = GetAOPFunc(GET_AOP_FLAG(imessage));
    if(!AOP_FUNC)
       return FUSEDMM_AOP_FAIL_RETURN;
@@ -701,6 +816,9 @@ int fusedMM_csr
       {
          const VALUETYPE *lhs = x + i * ldx; // Xi 
          VALUETYPE *O = z + i * ldz;  // Zi
+         INDEXTYPE *O_arg = z_arg + i * ldz;
+         INDEXTYPE row_size = pntre[i] - pntrb[i];
+         row_size = (row_size < 0) ? 0 : row_size;
 #ifndef LOAD_BALANCE
          // ASSUMPTION: feature dimension k is small enough to fit in stack, 
          //    need to use some efficient allocator otherwise  
@@ -708,6 +826,7 @@ int fusedMM_csr
 #endif
          for (INDEXTYPE j=pntrb[i]; j < pntre[i]; j++)
          {
+            // printf("Half!\n");
             VALUETYPE scal, out; 
             const VALUETYPE *cT = T; /* where T is const */ 
             INDEXTYPE cid = indx[j];
@@ -726,14 +845,22 @@ int fusedMM_csr
             status += 
          #endif
                ROP_FUNC(k,lhs,k,cT, &scal);
+         // printf(">> Before (out): %f\n", out);
          #ifdef DEBUG
             status += 
          #endif
                SOP_FUNC(scal, &out);
+               out = (GET_VSC_FLAG(imessage) == VSC_MEAN) ? out / row_size : out;
+         // printf(">> FLAG VALUE: %d, row size: %d\n", GET_VSC_FLAG(imessage) == VSC_MEAN, row_size);
          #ifdef DEBUG
             status += 
          #endif
                VSC_FUNC(k,T,out, k,T);
+         #ifdef DEBUG
+            status += 
+         #endif
+               AOParg_FUNC(k, T, k, O, O_arg, j);
+               // KERN_AOP_MAX_ARG(k, T, k, O, O_arg, j);
          #ifdef DEBUG
             status += 
          #endif

@@ -450,16 +450,16 @@ void performDummySpMM(int flag)
 }
 
 
-// int main(int narg, char **argv)
-// {
+int main(int narg, char **argv)
+{
 
-//    // performSpMM();
-//    // printf("Status: %d\n", ENABLE_OPT_FUSEDMM);
-//    performDummySpMM(3);
-//    printf("\nDone!\n");
-//    // GetSpeedup(inputfile, option, M, K, csKB, nrep, isTest, skHd, alpha, beta, tkern);
-//    return 0;
-// }
+   // performSpMM();
+   // printf("Status: %d\n", ENABLE_OPT_FUSEDMM);
+   performDummySpMM(3);
+   printf("\nDone!\n");
+   // GetSpeedup(inputfile, option, M, K, csKB, nrep, isTest, skHd, alpha, beta, tkern);
+   return 0;
+}
 
 // Run: make; ./bin/xsOptFusedMMtime_fr_pt
 }

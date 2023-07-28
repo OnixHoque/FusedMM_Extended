@@ -42,6 +42,8 @@ typedef int (*FP_VSC_FUNC)(INDEXTYPE rhs_dim, const VALUETYPE *rhs,
       VALUETYPE scal, INDEXTYPE out_dim, VALUETYPE *out); 
 typedef int (*FP_AOP_FUNC)(INDEXTYPE rhs_dim, const VALUETYPE *rhs, INDEXTYPE out_dim, 
       VALUETYPE *out); 
+typedef int (*FP_AOP_ARG_FUNC)(INDEXTYPE rhs_dim, const VALUETYPE *rhs, INDEXTYPE out_dim, 
+      VALUETYPE *out, INDEXTYPE * out_arg, INDEXTYPE idx); 
 /*
  * USER DEFINE FUNC IMPLEMENTATION 
  * DUMMY function, always return error when not implemented by user but used in
