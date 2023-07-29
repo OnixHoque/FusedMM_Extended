@@ -6,3 +6,4 @@ kernels/Make.inc
 kernels/Makefile
 kernels/rungen.sh
 kernels/lib/*.a
+shared_object/
