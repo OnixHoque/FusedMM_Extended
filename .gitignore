@@ -8,3 +8,4 @@ kernels/rungen.sh
 kernels/lib/*.a
 shared_object/
 pybind/*.a
+.vscode/
