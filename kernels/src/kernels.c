@@ -562,7 +562,7 @@ void sgfusedMM_csr
             kk = k / GVLEN;
             if (k % GVLEN || k > MAXDIM_SPMM) /* no optimize kernel */
             {
-               if (getenv("FUSEDMM_DEBUG_SPMM_KERNEL")) printf("Calling trused fusedmm spmm\n");
+               // if (getenv("FUSEDMM_DEBUG_SPMM_KERNEL")) printf("Calling trused fusedmm spmm\n");
                trusted_fusedMM_spmm_csr(tkern, m, n, k, alpha, nnz, rows,
                                         cols, val, indx, pntrb, pntre, a, lda, 
                                         b, ldb, beta, c,ldc);
@@ -589,8 +589,7 @@ void sgfusedMM_csr
                                        cols, val, indx, pntrb, pntre, a, lda, 
                                        b, ldb, beta, c, ldc);
          #endif
-         if (getenv("FUSEDMM_DEBUG_SPMM_KERNEL"))
-            printf("Calling sgenkernels_spmm_b0, kk = %d, k = %d, GVLEN = %d, MAX_DIM = %d\n", kk, k, GVLEN, MAXDIM_SPMM);
+         // if (getenv("FUSEDMM_DEBUG_SPMM_KERNEL")) printf("Calling sgenkernels_spmm_b0, kk = %d, k = %d, GVLEN = %d, MAX_DIM = %d\n", kk, k, GVLEN, MAXDIM_SPMM);
          break;
       case 'g': // gcn
          if (KRUNTIME_GCN && k >= BESTK_GCN) /* assumption: k >= BESTK */
