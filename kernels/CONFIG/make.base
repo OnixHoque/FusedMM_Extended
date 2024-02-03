@@ -182,7 +182,7 @@ regblk=bacrb
 mdim=1024 
 
 kruntime=1   # 0 means K compile time, used in tuning phase  
-bestK=512    # needed when kruntime=1, normally got from tuning step  
+bestK=1024    # needed when kruntime=1, normally got from tuning step  
 
 kern=m   # t = tdist/fr, s = sigmoid, m = spmm, g = gcn 
 data=dataset/harvard.mtx      
